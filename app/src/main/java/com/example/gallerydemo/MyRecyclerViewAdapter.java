@@ -39,7 +39,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             int index = i + 1;
             mTitles[i] = "item" + index;
         }
-        this.onRecyclerItemClickListener=onRecyclerItemClickListener;
+        this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
 
     @NonNull

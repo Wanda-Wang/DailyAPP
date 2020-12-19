@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,10 +30,14 @@ public class MainActivity extends AppCompatActivity {
         initWidgets();
         initData();
 
+
         mAdapter = new MyRecyclerViewAdapter(this, new MyRecyclerViewAdapter.OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "点击了"+position+"项", Toast.LENGTH_SHORT).show();
+                //跳转到相簿
+                Intent intent = new Intent(MainActivity.this, AlbumActivity.class);
+                startActivity(intent);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
