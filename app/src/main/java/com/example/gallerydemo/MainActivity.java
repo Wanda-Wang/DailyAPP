@@ -3,6 +3,7 @@ package com.example.gallerydemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "点击了"+position+"项", Toast.LENGTH_SHORT).show();
                 //跳转到相簿
-                Intent intent = new Intent(MainActivity.this, AlbumActivity.class);
+                Intent intent = new Intent(MainActivity.this, ViewPagerActivity.class);
                 startActivity(intent);
             }
         });
