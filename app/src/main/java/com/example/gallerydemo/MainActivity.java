@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "点击了"+position+"项", Toast.LENGTH_SHORT).show();
                 //跳转到相簿
-                Intent intent = new Intent(MainActivity.this, ViewPagerActivity.class);
+                Intent intent = new Intent(MainActivity.this, AlbumActivity.class);
                 startActivity(intent);
             }
         });

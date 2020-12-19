@@ -3,6 +3,7 @@ package com.example.gallerydemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,7 +13,9 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +25,14 @@ public class AlbumActivity extends AppCompatActivity {
     private static final int REQUESTCODE_ALBUM = 1001;
     private String photoPath = null;
     private ImageView mImage = null;
+    public RecyclerView.Adapter mAdapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         init();
         show();
+
     }
 
     private void init(){
@@ -119,7 +124,17 @@ public class AlbumActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_album);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        ImageeAdapter imageeAdapter = new ImageeAdapter(imageeList);
-        recyclerView.setAdapter(imageeAdapter);
+        mAdapter = new ImageeAdapter(this, imageeList, new ImageeAdapter.OnRecyclerItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(AlbumActivity.this, "点击了"+position+"项",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AlbumActivity.this, ViewPagerActivity.class);
+                startActivity(intent);
+            }
+
+        });
+        recyclerView.setAdapter(mAdapter);
+
     }
 }

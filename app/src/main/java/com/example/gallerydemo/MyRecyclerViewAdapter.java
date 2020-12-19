@@ -13,12 +13,13 @@ import org.w3c.dom.Text;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>{
 
+    private LayoutInflater mLayoutInflater = null;
+    private String[] mTitles = null;
     private  OnRecyclerItemClickListener onRecyclerItemClickListener;
+
     public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener onRecyclerItemClickListener) {
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
-    private LayoutInflater mLayoutInflater = null;
-    private String[] mTitles = null;
 
     /**
      * 自定义RecyclerView 中item view点击回调方法

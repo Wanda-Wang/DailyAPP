@@ -28,7 +28,7 @@ public class MyPagerAdapter extends PagerAdapter {
         //添加照片
         PhotoView photoView = new PhotoView(container.getContext());
         photoView.setImageResource(sDrawables[position]);
-        //配饰适配器
+        //适配view
         container.addView(photoView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         return photoView;
