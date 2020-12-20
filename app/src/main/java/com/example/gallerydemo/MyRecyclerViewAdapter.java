@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>{
 
-    private LayoutInflater mLayoutInflater = null;
-    private String[] mTitles = null;
+    private List<MyImage> myImageList = new ArrayList<>();
     private  OnRecyclerItemClickListener onRecyclerItemClickListener;
 
     public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener onRecyclerItemClickListener) {
@@ -33,20 +36,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         void onItemClick(View view, int position);
     }
 
-    public MyRecyclerViewAdapter (Context context, OnRecyclerItemClickListener onRecyclerItemClickListener){
-        this.mLayoutInflater = LayoutInflater.from(context);
-        this.mTitles = new String[20];
-        for (int i = 0; i < 20; i++){
-            int index = i + 1;
-            mTitles[i] = "item" + index;
-        }
+    public MyRecyclerViewAdapter (Context context, List<MyImage> myImages,
+                                  OnRecyclerItemClickListener onRecyclerItemClickListener){
+        this.myImageList = myImages;
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = mLayoutInflater.inflate(R.layout.item_listview, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listview, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -62,20 +61,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        MyImage myImage = myImageList.get(position);
         holder.itemView.setTag(position);
-        holder.textView.setText(mTitles[position]);
+        holder.imageView.setImageResource(myImage.getImageeId());
     }
 
     @Override
     public int getItemCount() {
-        return mTitles.length;
+        return myImageList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView = null;
+        public ImageView imageView = null;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.name);
+            imageView = (ImageView) itemView.findViewById(R.id.image);
         }
     }
 }

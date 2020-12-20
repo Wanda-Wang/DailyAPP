@@ -13,6 +13,6 @@ public class SimpleSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_sample);
         PhotoView photoView = (PhotoView) findViewById(R.id.photoview);
-        photoView.setImageResource(R.drawable.sanxia);
+        //photoView.setImageResource(R.drawable.sanxia);
     }
 }

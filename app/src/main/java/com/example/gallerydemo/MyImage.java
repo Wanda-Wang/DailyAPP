@@ -1,9 +1,9 @@
 package com.example.gallerydemo;
 
-public class Imagee {
+public class MyImage {
     private int imageeId;
 
-    public Imagee (int imageeId) {
+    public MyImage(int imageeId) {
         this.imageeId = imageeId;
     }
 

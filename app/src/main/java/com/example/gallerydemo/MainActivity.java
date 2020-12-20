@@ -1,5 +1,6 @@
 package com.example.gallerydemo;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private List<PersonBean> list = new ArrayList<>();
+    private List<MyImage> myImageList = new ArrayList<>();
     private RecyclerView mRecyclerView = null;
     RecyclerView.LayoutManager mLayoutManager = null;
     RecyclerView.Adapter mAdapter = null;
@@ -28,11 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //隐藏标题栏
+        ActionBar actionBar = getSupportActionBar();;
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
         initWidgets();
         initData();
 
 
-        mAdapter = new MyRecyclerViewAdapter(this, new MyRecyclerViewAdapter.OnRecyclerItemClickListener() {
+        mAdapter = new MyRecyclerViewAdapter(this, myImageList, new MyRecyclerViewAdapter.OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "点击了"+position+"项", Toast.LENGTH_SHORT).show();
@@ -55,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        for (int i = 0; i < 15; i++){
-            PersonBean bean = new PersonBean();
-            bean.setIdImg(R.mipmap.ic_launcher);
-            bean.setName("hello"+i);
-            list.add(bean);
-        }
+        myImageList.add(new MyImage(R.mipmap.img1));
+        myImageList.add(new MyImage(R.mipmap.img2));
+        myImageList.add(new MyImage(R.mipmap.img3));
+        myImageList.add(new MyImage(R.mipmap.img4));
+        myImageList.add(new MyImage(R.mipmap.img5));
+        myImageList.add(new MyImage(R.mipmap.img6));
+        myImageList.add(new MyImage(R.mipmap.img7));
+        myImageList.add(new MyImage(R.mipmap.img8));
     }
 }

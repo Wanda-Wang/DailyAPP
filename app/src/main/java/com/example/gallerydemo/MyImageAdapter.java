@@ -4,9 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageeAdapter extends RecyclerView.Adapter <ImageeAdapter.ViewHolder> {
+public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHolder> {
 
-    private List<Imagee> mImageList = new ArrayList<>();
+    private List<MyImage> mImageList = new ArrayList<>();
     private OnRecyclerItemClickListener onRecyclerItemClickListener;
 
     public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener onRecyclerItemClickListener) {
@@ -36,8 +34,8 @@ public class ImageeAdapter extends RecyclerView.Adapter <ImageeAdapter.ViewHolde
     }
 
 
-    public ImageeAdapter (Context context, List<Imagee> imagees, OnRecyclerItemClickListener onRecyclerItemClickListener){
-        this.mImageList = imagees;
+    public MyImageAdapter(Context context, List<MyImage> myImages, OnRecyclerItemClickListener onRecyclerItemClickListener){
+        this.mImageList = myImages;
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
     @NonNull
@@ -59,9 +57,9 @@ public class ImageeAdapter extends RecyclerView.Adapter <ImageeAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Imagee imagee = mImageList.get(position);
+        MyImage myImage = mImageList.get(position);
         holder.itemView.setTag(position);
-        holder.imageeImage.setImageResource(imagee.getImageeId());
+        holder.imageView.setImageResource(myImage.getImageeId());
 
     }
 
@@ -71,10 +69,10 @@ public class ImageeAdapter extends RecyclerView.Adapter <ImageeAdapter.ViewHolde
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageeImage = null;
+        public ImageView imageView = null;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageeImage = (ImageView) itemView.findViewById(R.id.album);
+            imageView = (ImageView) itemView.findViewById(R.id.album);
         }
     }
 }
