@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -15,21 +14,24 @@ import java.util.List;
 
 
 public class AlbumActivity extends AppCompatActivity {
-    public List<MyImage> myImageList = new ArrayList<>();
-    private static final int REQUESTCODE_ALBUM = 1001;
-    private String photoPath = null;
-    private ImageView mImage = null;
-    public RecyclerView.Adapter mAdapter = null;
+    private List<MyImage> myImageList = new ArrayList<>();
+    private RecyclerView mRecyclerView = null;
+    private StaggeredGridLayoutManager mLayoutManager = null;
+    private RecyclerView.Adapter mAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-        init();
-        show();
+        initData();
+        initWidgets();
 
     }
 
-    private void init(){
+    /**
+     * 初始化数据
+     */
+    private void initData(){
         myImageList.add(new MyImage(R.mipmap.img1));
         myImageList.add(new MyImage(R.mipmap.img2));
         myImageList.add(new MyImage(R.mipmap.img3));
@@ -41,21 +43,32 @@ public class AlbumActivity extends AppCompatActivity {
 
     }
 
-    private void show(){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_album);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MyImageAdapter(this, myImageList, new MyImageAdapter.OnRecyclerItemClickListener() {
+    /**
+     * 初始化控件
+     */
+    private void initWidgets(){
+        //设置recyclerview
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_album);
+        mRecyclerView.setHasFixedSize(true);
+        //创建布局
+        mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        //设置布局管理器
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        //初始化适配器
+        mAdapter = new MyImageAdapter(this, myImageList,
+                R.layout.item_recyclerview_album, R.id.image_item_recyclerview_album,
+                new MyImageAdapter.OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(AlbumActivity.this, "点击了"+position+"项",
                         Toast.LENGTH_SHORT).show();
+                //跳转到ViewPager
                 Intent intent = new Intent(AlbumActivity.this, ViewPagerActivity.class);
                 startActivity(intent);
             }
 
         });
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
     }
 }
