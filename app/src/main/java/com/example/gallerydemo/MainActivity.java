@@ -2,10 +2,13 @@ package com.example.gallerydemo;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -15,9 +18,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private List<MyImage> myImageList = new ArrayList<>();
-    private RecyclerView mRecyclerView = null;
-    RecyclerView.LayoutManager mLayoutManager = null;
-    RecyclerView.Adapter mAdapter = null;
+    private RecyclerView recyclerView = null;
+    RecyclerView.LayoutManager layoutManager = null;
+    RecyclerView.Adapter adapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
+        requestWritePermission();
         initData();
         initWidgets();
-
     }
 
     /**
@@ -52,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initWidgets(){
         //设置recyclerview
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
+        recyclerView.setHasFixedSize(true);
         //创建线性布局
-        mLayoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         //设置布局管理器
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         //初始化适配器
-        mAdapter = new MyImageAdapter(this, myImageList,
+        adapter = new MyImageAdapter(this, myImageList,
                 R.layout.item_recyclerview_main, R.id.image_item_recyclerview_main,
                 new MyImageAdapter.OnRecyclerItemClickListener() {
             @Override
@@ -70,7 +75,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
+    }
+
+
+    private void requestWritePermission(){
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        }
     }
 
 }

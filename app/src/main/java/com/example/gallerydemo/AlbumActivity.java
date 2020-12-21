@@ -15,9 +15,9 @@ import java.util.List;
 
 public class AlbumActivity extends AppCompatActivity {
     private List<MyImage> myImageList = new ArrayList<>();
-    private RecyclerView mRecyclerView = null;
-    private StaggeredGridLayoutManager mLayoutManager = null;
-    private RecyclerView.Adapter mAdapter = null;
+    private RecyclerView recyclerView = null;
+    private StaggeredGridLayoutManager layoutManager = null;
+    private RecyclerView.Adapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +48,14 @@ public class AlbumActivity extends AppCompatActivity {
      */
     private void initWidgets(){
         //设置recyclerview
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_album);
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_album);
+        recyclerView.setHasFixedSize(true);
         //创建布局
-        mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         //设置布局管理器
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         //初始化适配器
-        mAdapter = new MyImageAdapter(this, myImageList,
+        adapter = new MyImageAdapter(this, myImageList,
                 R.layout.item_recyclerview_album, R.id.image_item_recyclerview_album,
                 new MyImageAdapter.OnRecyclerItemClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class AlbumActivity extends AppCompatActivity {
             }
 
         });
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
     }
 }

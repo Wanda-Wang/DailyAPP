@@ -15,20 +15,20 @@ import java.util.List;
 
 public class MyPagerAdapter extends PagerAdapter {
 
-    private static final int[] sDrawables = {R.mipmap.img1, R.mipmap.img2,
+    private static final int[] DRAWABLES = {R.mipmap.img1, R.mipmap.img2,
             R.mipmap.img3, R.mipmap.img4, R.mipmap.img5, R.mipmap.img6,
             R.mipmap.img7, R.mipmap.img8};
 
     @Override
     public int getCount() {
-        return sDrawables.length;
+        return DRAWABLES.length;
     }
 
     @Override
     public View instantiateItem(ViewGroup container, int position) {
         //添加照片
         PhotoView photoView = new PhotoView(container.getContext());
-        photoView.setImageResource(sDrawables[position]);
+        photoView.setImageResource(DRAWABLES[position]);
         //适配view
         container.addView(photoView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

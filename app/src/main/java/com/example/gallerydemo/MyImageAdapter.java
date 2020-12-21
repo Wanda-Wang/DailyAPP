@@ -1,6 +1,7 @@
 package com.example.gallerydemo;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHolder> {
 
-    private List<MyImage> mImageList = new ArrayList<>();
+    private List<MyImage> myImageList = new ArrayList<>();
     private OnRecyclerItemClickListener onRecyclerItemClickListener;
     private int inflateLayout;
     private static int item;
@@ -61,7 +62,7 @@ public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHol
     public MyImageAdapter(Context context, List<MyImage> myImages, int inflateLayout, int item,
                           OnRecyclerItemClickListener onRecyclerItemClickListener){
         this.inflateLayout = inflateLayout;
-        this.mImageList = myImages;
+        this.myImageList = myImages;
         this.item = item;
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
@@ -99,9 +100,10 @@ public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHol
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MyImage myImage = mImageList.get(position);
+        MyImage myImage = myImageList.get(position);
         holder.itemView.setTag(position);
-        holder.imageView.setImageResource(myImage.getImageeId());
+//        holder.imageView.setImageURI(Uri.parse(myImage.getMyImagePath()));
+        holder.imageView.setImageResource(myImage.getMyImageId());
 
     }
 
@@ -111,7 +113,7 @@ public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHol
      */
     @Override
     public int getItemCount() {
-        return mImageList.size();
+        return myImageList.size();
     }
 
 }
