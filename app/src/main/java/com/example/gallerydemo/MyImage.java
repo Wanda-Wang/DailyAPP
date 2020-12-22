@@ -24,4 +24,6 @@ public class MyImage {
     public String getMyImagePath() {
         return myImagePath;
     }
+
+
 }

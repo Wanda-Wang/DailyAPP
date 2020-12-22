@@ -3,7 +3,9 @@ package com.example.gallerydemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
@@ -35,15 +37,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class EditImageActivity extends AppCompatActivity {
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
+public class EditImageActivity extends AppCompatActivity {
 
     private static final int PHOTO_FROM_GALLERY = 1;
     private static final int PHOTO_FROM_CAMERA = 2;
     private ImageView imageView = null;
-    private Button buttonToGallery = null;
-    final HashMap<String,List<MyImage>> allPhotosTemp = new HashMap<>();//所有照片
-    private List<MyImage> myImageList = new ArrayList<>();
+    private List<MyImage> myImageList = MainActivity.myImageList;
     private RecyclerView recyclerView = null;
     private StaggeredGridLayoutManager layoutManager = null;
     private RecyclerView.Adapter adapter = null;
@@ -52,20 +53,8 @@ public class EditImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_image);
-//        initData();
-        getAllPhotoInfo();
         initWidgets();
-        //mSharedPreferences = SharedPreferences.getInstance(this);
         imageView = (ImageView) findViewById(R.id.image_item_recyclerview_edit_image);
-//        buttonToGallery = (Button) findViewById(R.id.button_editimage_to_gallery);
-//        buttonToGallery.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                gallery(v);
-//            }
-//        });
-
-        //getAllPhotoInfo();
     }
 
     //从相册取图片
@@ -103,64 +92,6 @@ public class EditImageActivity extends AppCompatActivity {
 
 
     /**
-     * 读取手机中所有图片信息
-     */
-    private void getAllPhotoInfo() {
-        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projImage = { MediaStore.Images.Media._ID
-                , MediaStore.Images.Media.DATA
-                ,MediaStore.Images.Media.SIZE
-                ,MediaStore.Images.Media.DISPLAY_NAME};
-        Cursor mCursor = getContentResolver().query(imageUri,
-                projImage,
-                MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
-                new String[]{"image/jpeg", "image/png"},
-                MediaStore.Images.Media.DATE_MODIFIED+" desc");
-
-        if(mCursor!=null){
-            while (mCursor.moveToNext()) {
-                // 获取图片的路径
-                String path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                int size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE))/1024;
-                String displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-                //用于展示相册初始化界面
-                //myImageList.add(new MyImage(MyImage.Type.Image,path,size,displayName));
-                myImageList.add(new MyImage(size,path,displayName));
-                // 获取该图片的父路径名
-                String dirPath = new File(path).getParentFile().getAbsolutePath();
-                //存储对应关系
-                if (allPhotosTemp.containsKey(dirPath)) {
-                    List<MyImage> data = allPhotosTemp.get(dirPath);
-                    data.add(new MyImage(size, path, displayName));
-                    continue;
-                } else {
-                    List<MyImage> data = new ArrayList<>();
-                    data.add(new MyImage(size, path, displayName));
-                    allPhotosTemp.put(dirPath,data);
-                }
-            }
-            mCursor.close();
-        }
-//        String imagePath = myImageList.get(0).getMyImagePath();
-//        imageView.setImageURI(Uri.parse(imagePath));
-    }
-
-    /**
-     * 初始化数据
-     */
-    private void initData(){
-        myImageList.add(new MyImage(R.mipmap.img1));
-        myImageList.add(new MyImage(R.mipmap.img2));
-        myImageList.add(new MyImage(R.mipmap.img3));
-        myImageList.add(new MyImage(R.mipmap.img4));
-        myImageList.add(new MyImage(R.mipmap.img5));
-        myImageList.add(new MyImage(R.mipmap.img6));
-        myImageList.add(new MyImage(R.mipmap.img7));
-        myImageList.add(new MyImage(R.mipmap.img8));
-
-    }
-
-    /**
      * 初始化控件
      */
     private void initWidgets(){
@@ -172,36 +103,23 @@ public class EditImageActivity extends AppCompatActivity {
         //设置布局管理器
         recyclerView.setLayoutManager(layoutManager);
         //初始化适配器
-        adapter = new MyImageAdapter(this, myImageList,
-                R.layout.item_recyclerview_edit_image, R.id.image_item_recyclerview_edit_image,
-                new MyImageAdapter.OnRecyclerItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Toast.makeText(EditImageActivity.this, "点击了"+position+"项",
-                                Toast.LENGTH_SHORT).show();
-                        //跳转到ViewPager
-                        Intent intent = new Intent(EditImageActivity.this, ViewPagerActivity.class);
-                        startActivity(intent);
-                    }
-
-                }){
-            @Override
-            public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-                MyImage myImage = myImageList.get(position);
-                holder.itemView.setTag(position);
-
-                //Bitmap压缩
-//                BitmapFactory.Options options = new BitmapFactory.Options();
-//                options.inSampleSize = 16;
-//                Bitmap bitmap = BitmapFactory.decodeFile(myImage.getMyImagePath(), options);
-//                holder.imageView.setImageBitmap(bitmap);
-
-                //Glide缓冲
-                Glide.with((Context) EditImageActivity.this).load(myImage.getMyImagePath()).into(holder.imageView);
-
-            }
-        };
-        recyclerView.setAdapter(adapter);
+        adapter = new MyEditImageAdapter(this, myImageList,
+                R.layout.item_recyclerview_edit_image, R.id.image_item_recyclerview_edit_image);
+        //                {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        Toast.makeText(EditImageActivity.this, "点击了"+position+"项",
+//                                Toast.LENGTH_SHORT).show();
+//                        //跳转到ViewPager
+//                        Intent intent = new Intent(EditImageActivity.this, ViewPagerActivity.class);
+//                        intent.putExtra("position", position);
+//                        startActivity(intent);
+//                    }
+//                }
+        //设计动画并绑定适配器
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(adapter);
+        scaleInAnimationAdapter.setFirstOnly(false);
+        recyclerView.setAdapter(scaleInAnimationAdapter);
 
     }
 

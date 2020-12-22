@@ -9,48 +9,82 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
+
 public class MainActivity extends AppCompatActivity {
-    private List<MyImage> myImageList = new ArrayList<>();
+    public static List<MyImage> myImageList = new ArrayList<>();
     private RecyclerView recyclerView = null;
     RecyclerView.LayoutManager layoutManager = null;
     RecyclerView.Adapter adapter = null;
+    final HashMap<String,List<MyImage>> allPhotosTemp = new HashMap<>();//所有照片
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //隐藏标题栏
-        ActionBar actionBar = getSupportActionBar();;
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-
         requestWritePermission();
-        initData();
+        getAllPhotoInfo();
         initWidgets();
     }
 
     /**
-     * 初始化数据
+     * 读取手机中所有图片信息
      */
-    private void initData(){
-        myImageList.add(new MyImage(R.mipmap.img1));
-        myImageList.add(new MyImage(R.mipmap.img2));
-        myImageList.add(new MyImage(R.mipmap.img3));
-        myImageList.add(new MyImage(R.mipmap.img4));
-        myImageList.add(new MyImage(R.mipmap.img5));
-        myImageList.add(new MyImage(R.mipmap.img6));
-        myImageList.add(new MyImage(R.mipmap.img7));
-        myImageList.add(new MyImage(R.mipmap.img8));
+    public void getAllPhotoInfo() {
+        Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projImage = { MediaStore.Images.Media._ID
+                , MediaStore.Images.Media.DATA
+                ,MediaStore.Images.Media.SIZE
+                ,MediaStore.Images.Media.DISPLAY_NAME};
+        Cursor mCursor = getContentResolver().query(imageUri,
+                projImage,
+                MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
+                new String[]{"image/jpeg", "image/png"},
+                MediaStore.Images.Media.DATE_MODIFIED+" desc");
+
+        if(mCursor!=null){
+            while (mCursor.moveToNext()) {
+                // 获取图片的路径
+                String path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                int size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE))/1024;
+                String displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+                //用于展示相册初始化界面
+                //myImageList.add(new MyImage(MyImage.Type.Image,path,size,displayName));
+                myImageList.add(new MyImage(size,path,displayName));
+                // 获取该图片的父路径名
+                String dirPath = new File(path).getParentFile().getAbsolutePath();
+                //存储对应关系
+                if (allPhotosTemp.containsKey(dirPath)) {
+                    List<MyImage> data = allPhotosTemp.get(dirPath);
+                    data.add(new MyImage(size, path, displayName));
+                    continue;
+                } else {
+                    List<MyImage> data = new ArrayList<>();
+                    data.add(new MyImage(size, path, displayName));
+                    allPhotosTemp.put(dirPath,data);
+                }
+            }
+            mCursor.close();
+        }
     }
+
 
     /**
      * 初始化控件
@@ -75,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        recyclerView.setAdapter(adapter);
+        //添加动画并绑定适配器
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(adapter);
+        scaleInAnimationAdapter.setFirstOnly(false);
+        recyclerView.setAdapter(scaleInAnimationAdapter);
     }
 
 

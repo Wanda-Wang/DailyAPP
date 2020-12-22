@@ -9,6 +9,8 @@
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager"/>
+        android:id="@+id/view_pager"
+        android:transitionName="share_element"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
