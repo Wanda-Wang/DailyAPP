@@ -1,6 +1,7 @@
 package com.example.gallerydemo;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +37,9 @@ public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHol
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(item);
+            if(imageView instanceof ParallaxImageView) {
+                ((ParallaxImageView) imageView).setParallaxTranslation();
+            }
         }
     }
 
@@ -103,11 +112,26 @@ public class MyImageAdapter extends RecyclerView.Adapter <MyImageAdapter.ViewHol
      * @param position 数据位置
      */
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         MyImage myImage = myImageList.get(position);
         holder.itemView.setTag(position);
         //Glide缓冲
-        Glide.with(this.context).load(myImage.getMyImagePath()).into(holder.imageView);
+        Glide.with(this.context)
+                .load(myImage.getMyImagePath())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            ((ParallaxImageView) holder.imageView).setParallaxTranslation();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            ((ParallaxImageView) holder.imageView).setParallaxTranslation();
+                        return false;
+                    }
+                })
+                .into(holder.imageView);
 
         //Bitmap压缩
 //                BitmapFactory.Options options = new BitmapFactory.Options();

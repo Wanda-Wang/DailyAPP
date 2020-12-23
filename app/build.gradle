@@ -39,5 +39,4 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:4.0.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    implementation 'com.facebook.fresco:fresco:2.3.0'
 }

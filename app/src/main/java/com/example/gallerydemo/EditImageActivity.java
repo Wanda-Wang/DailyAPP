@@ -28,10 +28,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,6 +63,8 @@ public class EditImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_image);
         initRecyclerView();
         initButton();
+//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout_edit_image_activity);
+//        relativeLayout.addView(View.inflate(this, R.layout.button_confirm, null));
     }
 
     //从相册取图片

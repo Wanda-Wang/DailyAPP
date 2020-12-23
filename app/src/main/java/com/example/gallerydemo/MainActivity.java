@@ -1,5 +1,6 @@
 package com.example.gallerydemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter adapter = null;
     final HashMap<String,List<MyImage>> allPhotosTemp = new HashMap<>();//所有照片
     public ArrayList<String> ExistedAlbum = new ArrayList<String>();
+    private int recyclerviewHeight = -1;
+    private int[] recyclerviewLocation = {-1, -1};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,20 @@ public class MainActivity extends AppCompatActivity {
         ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(adapter);
         scaleInAnimationAdapter.setFirstOnly(false);
         recyclerView.setAdapter(scaleInAnimationAdapter);
+//        recyclerView.setAdapter(adapter);
+        recyclerView.setTag(ParallaxImageView.RECYCLER_VIEW_TAG);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(recyclerviewHeight == -1){
+//                    recyclerviewHeight = recyclerView.getHeight();
+//                    recyclerView.getLocationOnScreen(recyclerviewLocation);
+//
+//                }
+//
+//            }
+//        });
     }
 
 

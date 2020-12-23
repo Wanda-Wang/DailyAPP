@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -190,7 +191,7 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
     public void onBindViewHolder(@NonNull final MyEditImageAdapter.ViewHolder holder, final int position) {
         final MyImage myImage = myImageList.get(position);
         holder.itemView.setTag(position);
-        //判断是否设置了监听器
+        //点击
         if (onRecyclerItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -214,11 +215,12 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
                     .into(holder.imageView);
 
         }
+        //长按
         if (onRecyclerItemLongClickListener != null) {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //判断是否已经选择
+                    //该图片已经选择
                     if (mySelectedImageList.contains(myImageList.get(position))){
                         Toast.makeText(v.getContext(), "longclick ", Toast.LENGTH_SHORT).show();
                         holder.imageView.setPadding(0,0,0,0);
@@ -229,6 +231,7 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
                                 .into(holder.imageView);
                         mySelectedImageList.remove(myImageList.get(position));
                     }
+                    //未选择
                     else {
                         Toast.makeText(v.getContext(), "longclick ", Toast.LENGTH_SHORT).show();
                         holder.imageView.setPadding(20, 20, 20, 20);
