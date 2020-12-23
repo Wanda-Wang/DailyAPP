@@ -5,6 +5,7 @@ public class MyImage {
     private int myImageSize;
     private String myImagePath;
     private String myImageDisplayName;
+    private String myImageAlbum;
 
     public MyImage(int myImageId) {
         this.myImageId = myImageId;

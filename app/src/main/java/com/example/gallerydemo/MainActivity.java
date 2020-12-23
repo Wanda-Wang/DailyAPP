@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager = null;
     RecyclerView.Adapter adapter = null;
     final HashMap<String,List<MyImage>> allPhotosTemp = new HashMap<>();//所有照片
+    public ArrayList<String> ExistedAlbum = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
