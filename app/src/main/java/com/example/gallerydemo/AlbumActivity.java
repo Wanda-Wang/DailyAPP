@@ -55,9 +55,9 @@ public class AlbumActivity extends AppCompatActivity {
         //设置布局管理器
         recyclerView.setLayoutManager(layoutManager);
         //初始化适配器
-        adapter = new MyImageAdapter(this, myImageList,
+        adapter = new MyAlbumImageAdapter(this, myImageList,
                 R.layout.item_recyclerview_album, R.id.image_item_recyclerview_album,
-                new MyImageAdapter.OnRecyclerItemClickListener() {
+                new MyAlbumImageAdapter.OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(AlbumActivity.this, "点击了"+position+"项",

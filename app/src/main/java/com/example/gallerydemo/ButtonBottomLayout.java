@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import java.util.Map;
+
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -20,6 +22,7 @@ public class ButtonBottomLayout extends RelativeLayout {
     private static final int PHOTO_FROM_GALLERY = 1;
     private static final int PHOTO_FROM_CAMERA = 2;
     private  FloatingActionButton buttonToGallery = null;
+    private FloatingActionButton buttonSwitchView = null;
 
     public ButtonBottomLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -39,6 +42,14 @@ public class ButtonBottomLayout extends RelativeLayout {
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
 //                intent.putExtras(bundle);
 //                startActivityForResult((Activity) v.getContext(), intent, PHOTO_FROM_GALLERY, bundle);
+            }
+        });
+        buttonSwitchView = (FloatingActionButton) findViewById(R.id.button_switch_view);
+        buttonSwitchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent((Activity)v.getContext(), MapActivity.class);
+                startActivity((Activity) v.getContext(), intent, bundle);
             }
         });
     }
