@@ -1,16 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="@color/black"
     tools:context=".ViewPagerActivity">
+
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager"
         android:transitionName="share_element"
+        android:background="@color/black"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.yinglan.scrolllayout.ScrollLayout
+        android:id="@+id/scroll_down_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+
+            <com.yinglan.scrolllayout.content.ContentListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"/>
+            <TextView
+                android:id="@+id/text_foot"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimaryDark"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="点击或上滑打开" />
+
+
+        </RelativeLayout>
+
+    </com.yinglan.scrolllayout.ScrollLayout>
+
+</RelativeLayout>
