@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Layout;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,8 +7,11 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.gallerydemo.Adapter.MyEditImageAdapter;
+import com.example.gallerydemo.Bean.MyImage;
+import com.example.gallerydemo.Helper.SDFileHelper;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class SaveService extends Service {

@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Bean;
 
 public class MyImage {
     private int myImageId;

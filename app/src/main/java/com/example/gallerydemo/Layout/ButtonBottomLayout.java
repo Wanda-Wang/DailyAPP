@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Layout;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.widget.RelativeLayout;
+
+import com.example.gallerydemo.EditImageActivity;
+import com.example.gallerydemo.MapActivity;
+import com.example.gallerydemo.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.Map;

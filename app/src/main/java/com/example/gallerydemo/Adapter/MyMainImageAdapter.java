@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -16,14 +16,16 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.gallerydemo.Bean.MyImage;
+import com.example.gallerydemo.ParallaxImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapter.ViewHolder> {
+public class MyMainImageAdapter extends RecyclerView.Adapter <MyMainImageAdapter.ViewHolder> {
 
     private List<MyImage> myImageList = new ArrayList<>();
-    private MyAlbumImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener = null;
+    private OnRecyclerItemClickListener onRecyclerItemClickListener = null;
     private int inflateLayout = 0;
     private Context context = null;
     private static int item;
@@ -36,6 +38,9 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(item);
+            if(imageView instanceof ParallaxImageView) {
+                ((ParallaxImageView) imageView).setParallaxTranslation();
+            }
         }
     }
 
@@ -43,14 +48,14 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
      * 设置监听
      * @param onRecyclerItemClickListener 监听器
      */
-    public void setOnRecyclerItemClickListener(MyAlbumImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener) {
+    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener onRecyclerItemClickListener) {
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
 
     /**
      * 自定义RecyclerView 中item view点击回调方法
      */
-    interface OnRecyclerItemClickListener{
+    public interface OnRecyclerItemClickListener{
         /**
          * item view 回调方法
          * @param view  被点击的view
@@ -67,8 +72,8 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
      * @param inflateLayout recyclerview布局
      * @param onRecyclerItemClickListener 监听
      */
-    public MyAlbumImageAdapter(Context context, List<MyImage> myImages, int inflateLayout, int item,
-                               MyAlbumImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener){
+    public MyMainImageAdapter(Context context, List<MyImage> myImages, int inflateLayout, int item,
+                              OnRecyclerItemClickListener onRecyclerItemClickListener){
         this.context = context;
         this.inflateLayout = inflateLayout;
         this.myImageList = myImages;
@@ -84,11 +89,11 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
      */
     @NonNull
     @Override
-    public MyAlbumImageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(inflateLayout, parent, false);
-        MyAlbumImageAdapter.ViewHolder viewHolder = new MyAlbumImageAdapter.ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
 
         //绑定监听
         view.setOnClickListener(new View.OnClickListener(){
@@ -108,12 +113,25 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
      * @param position 数据位置
      */
     @Override
-    public void onBindViewHolder(@NonNull final MyAlbumImageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         MyImage myImage = myImageList.get(position);
         holder.itemView.setTag(position);
         //Glide缓冲
         Glide.with(this.context)
                 .load(myImage.getMyImagePath())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            ((ParallaxImageView) holder.imageView).setParallaxTranslation();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            ((ParallaxImageView) holder.imageView).setParallaxTranslation();
+                        return false;
+                    }
+                })
                 .into(holder.imageView);
 
         //Bitmap压缩

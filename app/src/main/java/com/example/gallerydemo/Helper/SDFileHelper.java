@@ -1,4 +1,4 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Helper;
 
 import android.content.Context;
 import android.os.Environment;

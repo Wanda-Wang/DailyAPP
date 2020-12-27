@@ -1,12 +1,10 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Layout;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.AttributeSet;
@@ -19,13 +17,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.gallerydemo.Adapter.MyEditImageAdapter;
+import com.example.gallerydemo.Bean.MyImage;
+import com.example.gallerydemo.R;
+import com.example.gallerydemo.Helper.SDFileHelper;
+import com.example.gallerydemo.Service.SaveService;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-import static androidx.core.content.ContextCompat.startActivity;
 
 public class ButtonConfirmLayout extends RelativeLayout{
     Bundle bundle = new Bundle();
@@ -35,7 +35,7 @@ public class ButtonConfirmLayout extends RelativeLayout{
     private FloatingActionButton buttonConfirm = null;
     private ArrayList<String> itemsSelectAlbum = new ArrayList<String>();
     public SDFileHelper sdFileHelper=new SDFileHelper(getContext());
-    public static List<MyImage> mySelectedImageList=MyEditImageAdapter.mySelectedImageList;
+    public static List<MyImage> mySelectedImageList= MyEditImageAdapter.mySelectedImageList;
 
     public ButtonConfirmLayout(final Context context, AttributeSet attrs) {
         super(context, attrs);

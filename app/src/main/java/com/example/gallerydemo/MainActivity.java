@@ -16,6 +16,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.gallerydemo.Adapter.MyMainImageAdapter;
+import com.example.gallerydemo.Bean.MyImage;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

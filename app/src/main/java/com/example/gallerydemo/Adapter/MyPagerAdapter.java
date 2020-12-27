@@ -1,28 +1,16 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
+import com.example.gallerydemo.MainActivity;
+import com.example.gallerydemo.Bean.MyImage;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class MyPagerAdapter extends PagerAdapter {
 

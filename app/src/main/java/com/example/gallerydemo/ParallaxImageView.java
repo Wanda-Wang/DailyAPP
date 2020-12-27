@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gallerydemo.R;
+
 public class ParallaxImageView extends androidx.appcompat.widget.AppCompatImageView {
     public static final String RECYCLER_VIEW_TAG = "RECYCLER_VIEW_TAG";
 

@@ -1,15 +1,12 @@
-package com.example.gallerydemo;
+package com.example.gallerydemo.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,8 +15,9 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.gallerydemo.Bean.MyImage;
+import com.example.gallerydemo.R;
+import com.example.gallerydemo.ViewPagerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +64,7 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
     /**
      * 自定义RecyclerView 中item view点击回调方法
      */
-    interface OnRecyclerItemClickListener{
+    public interface OnRecyclerItemClickListener{
         /**
          * item view 回调方法 点击
          * @param view  被点击的view
@@ -78,7 +76,7 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
     /**
      * 自定义RecyclerView 中item view长按回调方法
      */
-    interface OnRecyclerItemLongClickListener{
+    public interface OnRecyclerItemLongClickListener{
         /**
          * item view 回调方法 长按
          * @param view  被点击的view
