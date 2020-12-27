@@ -143,7 +143,7 @@ public class EditImageActivity extends AppCompatActivity {
         recyclerView.setAdapter(scaleInAnimationAdapter);
 
     }
-
+    //多余
     public void initButton(){
         if(!itemsSelectAlbum.contains("新建相册")){
             itemsSelectAlbum.add("新建故事");

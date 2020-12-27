@@ -27,7 +27,7 @@ import java.util.List;
 public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.ViewHolder> {
 
     private List<MyImage> myImageList = new ArrayList<>();
-    private List<MyImage> mySelectedImageList = new ArrayList<>();
+    public static List<MyImage> mySelectedImageList = new ArrayList<>();
     private MyEditImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener = null;
     private MyEditImageAdapter.OnRecyclerItemLongClickListener onRecyclerItemLongClickListener = null;
     private int inflateLayout = 0;
@@ -242,6 +242,7 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
                                 .into(holder.imageView);
                         mySelectedImageList.add(myImageList.get(position));
                     }
+
                     return true;
                 }
             });

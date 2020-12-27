@@ -6,6 +6,8 @@ public class MyImage {
     private String myImagePath;
     private String myImageDisplayName;
     private String myImageAlbum;
+    private String myImageLocation;
+    private String myImagePerson;
 
     public MyImage(int myImageId) {
         this.myImageId = myImageId;
@@ -26,5 +28,8 @@ public class MyImage {
         return myImagePath;
     }
 
+    public String getMyImageDisplayName() {
+        return myImageDisplayName;
+    }
 
 }

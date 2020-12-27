@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         requestWritePermission();
         getAllPhotoInfo();
         initWidgets();
+
     }
 
     /**
