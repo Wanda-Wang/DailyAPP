@@ -23,11 +23,14 @@ import android.widget.Toast;
 
 import com.example.df_daily.Adapter.MyAlbumImageAdapter;
 import com.example.df_daily.Adapter.MyEditImageAdapter;
+import com.example.df_daily.Helper.DbController;
 import com.example.df_daily.bean.MyImage;
+import com.example.df_daily.bean.PhotoInfo;
 import com.example.df_daily.ui.home.HomeFragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,11 +48,14 @@ public class AlbumActivity extends AppCompatActivity {
     private MyAlbumImageAdapter adapter = null;
     private AlertDialog.Builder builder = null;
     private ArrayList<String> itemsSelectAlbum = new ArrayList<String>();
+    private DbController mDbController;
+    private PhotoInfo photoInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         requestWritePermission();
+        mDbController = DbController.getInstance(AlbumActivity.this);
 //        initButton();
 //        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout_edit_image_activity);
 //        relativeLayout.addView(View.inflate(this, R.layout.button_confirm, null));
@@ -109,7 +115,7 @@ public class AlbumActivity extends AppCompatActivity {
             if(files!=null){
                 for(int i=0;i<files.length;i++){
                     Log.i(TAG,"FileName:"+files[i].getName());
-                    myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName()));
+                    myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName(),albumName,"",intent.getStringExtra("buildDate")));
                 }
             }
         }

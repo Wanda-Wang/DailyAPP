@@ -3,6 +3,7 @@ package com.example.df_daily.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.ViewHolder> {
 
+    private static String TAG ="wanda MyEditImageAdapter";
     private List<MyImage> myImageList = new ArrayList<>();
     public static List<MyImage> mySelectedImageList;
     private MyEditImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener = null;
@@ -192,9 +194,12 @@ public class MyEditImageAdapter extends RecyclerView.Adapter<MyEditImageAdapter.
         //点击
         if (onRecyclerItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(v.getContext(), "click ", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG,"position"+position);
                     Intent intent = new Intent(v.getContext(), ViewPagerActivity.class);
                     intent.putExtra("position", position);
                     //添加过渡动画

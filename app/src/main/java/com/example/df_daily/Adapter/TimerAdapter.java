@@ -113,7 +113,7 @@ public class TimerAdapter extends BaseAdapter {
             holder.tvDot.setBackgroundResource(R.drawable.timelline_dot_normal);
         }
 
-        holder.tvAlbumTime.setText(getStringDateShort(MyAlbum.getBuildDate()).toString());
+        holder.tvAlbumTime.setText(getStringDateShort(MyAlbum.getBuildDate()));
         holder.tvAlbumName.setText(MyAlbum.getAlbumName());
         return convertView;
     }

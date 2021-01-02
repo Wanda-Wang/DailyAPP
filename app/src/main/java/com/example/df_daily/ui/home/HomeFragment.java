@@ -25,23 +25,29 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.df_daily.Adapter.MyMainImageAdapter;
 import com.example.df_daily.Adapter.TimerAdapter;
 import com.example.df_daily.Adapter.TraceListAdapter;
 import com.example.df_daily.AlbumActivity;
 import com.example.df_daily.Helper.SharedHelper;
+import com.example.df_daily.ParallaxImageView;
 import com.example.df_daily.R;
 import com.example.df_daily.bean.MyAlbum;
 import com.example.df_daily.bean.MyImage;
 import com.example.df_daily.bean.Trace;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 
 public class HomeFragment extends Fragment {
@@ -56,6 +62,9 @@ public class HomeFragment extends Fragment {
     private TimerAdapter timerAdapter;//显示主页时间轴适配器
     SharedHelper sp;
     private List<MyAlbum> albums;//相册数据list
+    private RecyclerView recyclerView = null;
+    RecyclerView.LayoutManager layoutManager = null;
+    RecyclerView.Adapter adapter = null;
     private TextView textView;//没有相册数据显示添加故事吧！
 
 
@@ -64,24 +73,37 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        findView(root);
+//        findView(root);
         sp=new SharedHelper(getActivity());
         albums = new ArrayList<MyAlbum>();
         textView=root.findViewById(R.id.tv);
+        //设置recyclerview
+        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview_main);
+//        initData();
+        initWidgets();
         requestWritePermission();
         getAllPhotoInfo();
+
         return root;
     }
 
     @Override
     public void onResume() {
         initData();
+        adapter.notifyDataSetChanged();
+//        timerAdapter.notifyDataSetChanged();
         super.onResume();
     }
-
-    private void findView(View view) {
-        lvTrace = view.findViewById(R.id.lvTrace);
+    @Override
+    public void onStop() {
+        albums.clear();
+        super.onStop();
     }
+
+
+    //    private void findView(View view) {
+//        lvTrace = view.findViewById(R.id.lvTrace);
+//    }
     /**
      * 读取手机中所有图片信息
      */
@@ -125,6 +147,62 @@ public class HomeFragment extends Fragment {
             mCursor.close();
         }
     }
+    /**
+     * 初始化控件
+     */
+    private void initWidgets(){
+
+        recyclerView.setHasFixedSize(true);
+        //创建线性布局
+        layoutManager = new LinearLayoutManager(getActivity());
+        //设置布局管理器
+        recyclerView.setLayoutManager(layoutManager);
+        //初始化适配器
+        adapter = new MyMainImageAdapter(getActivity(), albums,
+                R.layout.item_recyclerview_main, R.id.image_item_recyclerview_main,R.id.dateItem,R.id.AlbumNameItem,
+                new MyMainImageAdapter.OnRecyclerItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getContext(), "点击了"+position+"项", Toast.LENGTH_SHORT).show();
+                        //跳转到相簿
+//                        Intent intent = new Intent(getActivity(), AlbumActivity.class);
+//                        startActivity(intent);
+                        Intent intent=new Intent(getActivity(), AlbumActivity.class);
+                        intent.putExtra("albumName",albums.get(position).getAlbumName());
+                        intent.putExtra("buildDate",getStringDateShort(albums.get(position).getBuildDate()));
+                        Log.i(TAG,"albumName:"+albums.get(position).getAlbumName());
+                        startActivity(intent);
+                    }
+                });
+        //添加动画并绑定适配器
+        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(adapter);
+        scaleInAnimationAdapter.setFirstOnly(false);
+        recyclerView.setAdapter(scaleInAnimationAdapter);
+//        recyclerView.setAdapter(adapter);
+        recyclerView.setTag(ParallaxImageView.RECYCLER_VIEW_TAG);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(recyclerviewHeight == -1){
+//                    recyclerviewHeight = recyclerView.getHeight();
+//                    recyclerView.getLocationOnScreen(recyclerviewLocation);
+//
+//                }
+//
+//            }
+//        });
+    }
+    /**
+     * 获取现在时间
+     *
+     * @return 返回短时间字符串格式yyyy-MM-dd
+     */
+    public static String getStringDateShort(Date currentTime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
     private void initData() {
         // 模拟一些假的数据
         traceList.add(new Trace("2016-05-25 17:48:00", "[沈阳市] [沈阳和平五部]的派件已签收 感谢使用中通快递,期待再次为您服务!"));
@@ -142,27 +220,27 @@ public class HomeFragment extends Fragment {
             File[] files = path.listFiles();// 读取文件夹下文件
         //如果sp里存有album数据，就读取
         if(sp.readAlbum()!=null&&files!=null){
-            albums=sp.readAlbum();
+            albums.addAll(sp.readAlbum());
         }
         //将album倒序排列
         Collections.reverse(albums);
-        timerAdapter=new TimerAdapter(getActivity(),albums);
-        lvTrace.setAdapter(timerAdapter);
+//        timerAdapter=new TimerAdapter(getActivity(),albums);
+//        lvTrace.setAdapter(timerAdapter);
         if(albums.size()>0){
             textView.setText("");
         }
-        //设置listview点击事件
-        lvTrace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Book book = bookList.get(i);
-//                Toast.makeText(ListViewActivity.this,book.toString(),Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(getActivity(), AlbumActivity.class);
-                intent.putExtra("albumName",albums.get(i).getAlbumName());
-                Log.i(TAG,"albumName:"+albums.get(i).getAlbumName());
-                startActivity(intent);
-            }
-        });
+//        //设置listview点击事件
+//        lvTrace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+////                Book book = bookList.get(i);
+////                Toast.makeText(ListViewActivity.this,book.toString(),Toast.LENGTH_LONG).show();
+//                Intent intent=new Intent(getActivity(), AlbumActivity.class);
+//                intent.putExtra("albumName",albums.get(i).getAlbumName());
+//                Log.i(TAG,"albumName:"+albums.get(i).getAlbumName());
+//                startActivity(intent);
+//            }
+//        });
 
     }
     private void requestWritePermission(){
