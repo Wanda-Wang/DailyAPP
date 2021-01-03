@@ -19,18 +19,26 @@ public class PhotoInfo {
 
     private String date;//相册创建时间
 
-    @Generated(hash = 1018881831)
+
+    private float latitude;//经度
+    private float longitude;//纬度
+
+
+
+    @Generated(hash = 2143356537)
+    public PhotoInfo() {
+    }
+
+    @Generated(hash = 1705122449)
     public PhotoInfo(Long id, String photoName, String albumName, String story,
-            String date) {
+            String date, float latitude, float longitude) {
         this.id = id;
         this.photoName = photoName;
         this.albumName = albumName;
         this.story = story;
         this.date = date;
-    }
-
-    @Generated(hash = 2143356537)
-    public PhotoInfo() {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Long getId() {
@@ -71,5 +79,21 @@ public class PhotoInfo {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public float getLongitude() {
+        return this.longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getLatitude() {
+        return this.latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
     }
 }

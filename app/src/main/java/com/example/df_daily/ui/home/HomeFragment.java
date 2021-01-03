@@ -22,12 +22,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.baidu.mapapi.model.LatLng;
 import com.example.df_daily.Adapter.MyMainImageAdapter;
 import com.example.df_daily.Adapter.TimerAdapter;
 import com.example.df_daily.Adapter.TraceListAdapter;
@@ -109,11 +111,15 @@ public class HomeFragment extends Fragment {
      */
     public void getAllPhotoInfo() {
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projImage = { MediaStore.Images.Media._ID
-                , MediaStore.Images.Media.DATA
-                ,MediaStore.Images.Media.SIZE
-                ,MediaStore.Images.Media.DISPLAY_NAME
-                ,MediaStore.Images.Media.DATE_TAKEN};
+        String[] projImage = { MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.TITLE,
+                MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.DATE_MODIFIED,
+                MediaStore.Images.Media.LATITUDE,
+                MediaStore.Images.Media.LONGITUDE,
+                MediaStore.Images.Media.SIZE};
         Cursor mCursor = getActivity().getContentResolver().query(imageUri,
                 projImage,
                 MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
@@ -122,25 +128,24 @@ public class HomeFragment extends Fragment {
 
         if(mCursor!=null){
             while (mCursor.moveToNext()) {
-                // 获取图片的路径
                 String path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                int size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE))/1024;
                 String displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-                int dateAdd=mCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
-                Log.i(TAG,"照片添加时间："+dateAdd);
+                float size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE))/1024;
+                float latitude = mCursor.getFloat(mCursor.getColumnIndex(MediaStore.Images.Media.LATITUDE));
+                float longitude = mCursor.getFloat(mCursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE));
+                Log.i(TAG,"经纬度："+latitude+","+longitude);
                 //用于展示相册初始化界面
-                //myImageList.add(new MyImage(MyImage.Type.Image,path,size,displayName));
-                myImageList.add(new MyImage(size,path,displayName,dateAdd));
+                myImageList.add(new MyImage(size,path,displayName,latitude,longitude));
                 // 获取该图片的父路径名
                 String dirPath = new File(path).getParentFile().getAbsolutePath();
                 //存储对应关系
                 if (allPhotosTemp.containsKey(dirPath)) {
                     List<MyImage> data = allPhotosTemp.get(dirPath);
-                    data.add(new MyImage(size, path, displayName,dateAdd));
+                    data.add(new MyImage(size, path, displayName,latitude,longitude));
                     continue;
                 } else {
                     List<MyImage> data = new ArrayList<>();
-                    data.add(new MyImage(size, path, displayName,dateAdd));
+                    data.add(new MyImage(size, path, displayName,latitude,longitude));
                     allPhotosTemp.put(dirPath,data);
                 }
             }
@@ -168,6 +173,7 @@ public class HomeFragment extends Fragment {
 //                        Intent intent = new Intent(getActivity(), AlbumActivity.class);
 //                        startActivity(intent);
                         Intent intent=new Intent(getActivity(), AlbumActivity.class);
+                        intent.putExtra("first",albums.get(position).getFirstPhotoPath());
                         intent.putExtra("albumName",albums.get(position).getAlbumName());
                         intent.putExtra("buildDate",getStringDateShort(albums.get(position).getBuildDate()));
                         Log.i(TAG,"albumName:"+albums.get(position).getAlbumName());
@@ -262,5 +268,65 @@ public class HomeFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
+    }
+    public LatLng getPhotoLocation(String imagePath){
+        float output1=0.0f;
+        float output2=0.0f;
+        LatLng latLng=null;
+        try {
+            ExifInterface exifInterface= new ExifInterface(imagePath);
+            String datetime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);// 拍摄时间
+            String deviceName = exifInterface.getAttribute(ExifInterface.TAG_MAKE);// 设备品牌
+            String deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL); // 设备型号
+            String latValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            String lngValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            String latRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+            String lngRef = exifInterface.getAttribute
+                    (ExifInterface.TAG_GPS_LONGITUDE_REF);
+            if (latValue != null && latRef != null && lngValue != null && lngRef != null) {
+                try {
+                    output1 = convertRationalLatLonToFloat(latValue, latRef);
+                    Log.i(TAG, String.valueOf(output1));
+                    output2 = convertRationalLatLonToFloat(lngValue, lngRef);
+                    Log.i(TAG, String.valueOf(output2));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.i(TAG, String.valueOf(output1));
+            Log.i(TAG, String.valueOf(output2));
+//            Toast.makeText(AlbumActivity.this, deviceName + ":" + deviceModel, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Toast.makeText(getBaseContext(), output1 + ";" + output2 , Toast.LENGTH_LONG).show();
+
+        latLng = new LatLng(output1 , output1 );
+        return latLng;
+    }
+    private static float convertRationalLatLonToFloat(
+            String rationalString, String ref) {
+
+        String[] parts = rationalString.split(",");
+
+        String[] pair;
+        pair = parts[0].split("/");
+        double degrees = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[1].split("/");
+        double minutes = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[2].split("/");
+        double seconds = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        double result = degrees + (minutes / 60.0) + (seconds / 3600.0);
+        if ((ref.equals("S") || ref.equals("W"))) {
+            return (float) -result;
+        }
+        return (float) result;
     }
 }

@@ -77,30 +77,33 @@
                                 android:text="000"
                                 android:textColor="@color/white"/>
                             <TextView
-                                android:id="@+id/标签"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/文件名"
-                                android:layout_marginLeft="20dp"
-                                android:text="标签:"
-                                android:textSize="20sp"
-                                android:layout_marginTop="10dp"
-                                android:textColor="@color/white"/>
-                            <RadioGroup
-                                android:id="@+id/vp_rg"
-                                android:layout_below="@id/文件名"
-                                android:layout_toRightOf="@id/标签"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                                <RadioButton
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                            </RadioGroup>
+                                android:layout_height="wrap_content"/>
+<!--                            <TextView-->
+<!--                                android:id="@+id/标签"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_below="@id/文件名"-->
+<!--                                android:layout_marginLeft="20dp"-->
+<!--                                android:text="标签:"-->
+<!--                                android:textSize="20sp"-->
+<!--                                android:layout_marginTop="10dp"-->
+<!--                                android:textColor="@color/white"/>-->
+<!--                            <RadioGroup-->
+<!--                                android:id="@+id/vp_rg"-->
+<!--                                android:layout_below="@id/文件名"-->
+<!--                                android:layout_toRightOf="@id/标签"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content">-->
+<!--                                <RadioButton-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"/>-->
+<!--                            </RadioGroup>-->
                             <TextView
                                 android:id="@+id/我的故事"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/标签"
+                                android:layout_below="@id/文件名"
                                 android:layout_marginLeft="20dp"
                                 android:textSize="20sp"
                                 android:text="我的故事："
@@ -111,6 +114,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                android:focusable="false"
+                                android:theme="@style/MyEditText"
                                 android:clickable="true"
                                 android:layout_marginLeft="20dp"
                                 android:layout_marginTop="5dp"

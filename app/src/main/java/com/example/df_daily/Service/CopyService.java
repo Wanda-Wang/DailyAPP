@@ -8,13 +8,21 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.exifinterface.media.ExifInterface;
+
+import com.baidu.mapapi.model.LatLng;
 import com.example.df_daily.Adapter.MyEditImageAdapter;
+import com.example.df_daily.AlbumActivity;
+import com.example.df_daily.Helper.DbController;
 import com.example.df_daily.Helper.SharedHelper;
+import com.example.df_daily.ViewPagerActivity;
 import com.example.df_daily.bean.MyAlbum;
 import com.example.df_daily.bean.MyImage;
 import com.example.df_daily.Helper.SDFileHelper;
+import com.example.df_daily.bean.PhotoInfo;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +34,8 @@ public class CopyService extends Service {
     SDFileHelper sdFileHelper=new SDFileHelper(getBaseContext());
     SharedHelper sp;
     List<MyAlbum> albums;
-//    Intent intent=getIntent();
+    private DbController mDbController;
+    private PhotoInfo photoInfo;
     public CopyService() {
     }
 
@@ -40,6 +49,7 @@ public class CopyService extends Service {
 
     @Override
     public void onCreate() {
+        mDbController = DbController.getInstance(getBaseContext());
         super.onCreate();
     }
 
@@ -60,13 +70,14 @@ public class CopyService extends Service {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
-                    //选中图片数大于零才可以添加相册到sp且新建相册文件夹
-//                    if(mySelectedImageList.size()>0){
-//                    MyImage myImage=new MyImage();
                         int i=0;
                         for(MyImage myImage:mySelectedImageList){
+                            Date date=new Date(System.currentTimeMillis());
+
                             String filename=myImage.getMyImageDisplayName();
+                            //将选中照片信息添加到数据库
+                            photoInfo=new PhotoInfo(null,filename,albumName,null,getStringDateShort(date),myImage.getLatitude(),myImage.getLongitude());
+                            mDbController.insertOrReplace(photoInfo);
                             //附件文件路径
                             String toFile= Environment.getExternalStorageDirectory() + File.separator+".photo"+ File.separator+albumName+ File.separator+ filename;
                             //附件目录路径
@@ -103,7 +114,7 @@ public class CopyService extends Service {
                             }
 
                             if(i==0){
-                                    albums.add(new MyAlbum(new Date(System.currentTimeMillis()),albumName,toFile));
+                                    albums.add(new MyAlbum(date,albumName,toFile));
                                     sp.saveAlbum(albums);
                             }
                             i++;
@@ -130,5 +141,77 @@ public class CopyService extends Service {
 
         public void savePhoto(String ablumName, String photoName){
             File file=new File(Environment.getDataDirectory()+"/"+getPackageName()+"/.photo"+"/"+ablumName,photoName);
-        }    }
+        }
+    }
+    public LatLng getPhotoLocation(String imagePath){
+        float output1=0.0f;
+        float output2=0.0f;
+        LatLng latLng=null;
+        try {
+            ExifInterface exifInterface= new ExifInterface(imagePath);
+//            String datetime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);// 拍摄时间
+//            String deviceName = exifInterface.getAttribute(ExifInterface.TAG_MAKE);// 设备品牌
+//            String deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL); // 设备型号
+            String latValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            String lngValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            String latRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+            String lngRef = exifInterface.getAttribute
+                    (ExifInterface.TAG_GPS_LONGITUDE_REF);
+            if (latValue != null && latRef != null && lngValue != null && lngRef != null) {
+                try {
+                    output1 = convertRationalLatLonToFloat(latValue, latRef);
+                    Log.i(TAG, String.valueOf(output1));
+                    output2 = convertRationalLatLonToFloat(lngValue, lngRef);
+                    Log.i(TAG, String.valueOf(output2));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.i(TAG, String.valueOf(output1));
+            Log.i(TAG, String.valueOf(output2));
+//            Toast.makeText(AlbumActivity.this, deviceName + ":" + deviceModel, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Toast.makeText(getBaseContext(), output1 + ";" + output2 , Toast.LENGTH_LONG).show();
+
+        latLng = new LatLng(output1 , output1 );
+        return latLng;
+    }
+    private static float convertRationalLatLonToFloat(
+            String rationalString, String ref) {
+
+        String[] parts = rationalString.split(",");
+
+        String[] pair;
+        pair = parts[0].split("/");
+        double degrees = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[1].split("/");
+        double minutes = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[2].split("/");
+        double seconds = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        double result = degrees + (minutes / 60.0) + (seconds / 3600.0);
+        if ((ref.equals("S") || ref.equals("W"))) {
+            return (float) -result;
+        }
+        return (float) result;
+    }
+
+    /**
+     * 获取现在时间
+     *
+     * @return 返回短时间字符串格式yyyy-MM-dd
+     */
+    public static String getStringDateShort(Date currentTime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
 }

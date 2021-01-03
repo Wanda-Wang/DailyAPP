@@ -1,9 +1,11 @@
 package com.example.df_daily;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -14,6 +16,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +26,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
 import com.example.df_daily.Adapter.MyAlbumImageAdapter;
 import com.example.df_daily.Adapter.MyEditImageAdapter;
 import com.example.df_daily.Helper.DbController;
+import com.example.df_daily.Helper.SharedHelper;
+import com.example.df_daily.Layout.ButtonChangeLayout;
 import com.example.df_daily.bean.MyImage;
 import com.example.df_daily.bean.PhotoInfo;
 import com.example.df_daily.ui.home.HomeFragment;
@@ -50,23 +58,47 @@ public class AlbumActivity extends AppCompatActivity {
     private ArrayList<String> itemsSelectAlbum = new ArrayList<String>();
     private DbController mDbController;
     private PhotoInfo photoInfo;
+//    private dateThread dateThread;
+    private SharedHelper sp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        sp=new SharedHelper(this);
+        sp.save_album(getIntent().getStringExtra("albumName"));
+        Log.i(TAG,"sp读取"+sp.read_album().get("_albumName"));
         requestWritePermission();
         mDbController = DbController.getInstance(AlbumActivity.this);
-//        initButton();
-//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout_edit_image_activity);
-//        relativeLayout.addView(View.inflate(this, R.layout.button_confirm, null));
+
+//        Bundle bundle=new Bundle();
+//        setTitle(intent.getStringExtra("albumName"));
+//        bundle.putString("albumName",);
+//        bundle.putString("buildDate",);
+//        bundle.putString("first",intent.getStringExtra("first"));
+////        getPhotoLocation(intent.getStringExtra("first"));
+//        msg.setData(bundle);
+
+//        dateThread.mHandler.sendMessage(msg);
+//        Log.i(TAG,"dateThread.mHandler"+dateThread.mHandler);
+
+
     }
 
     @Override
     protected void onResume() {
-        initData();
+//        dateThread=new dateThread();
+//        dateThread.start();
+//        Message msg=new Message();
+//        msg.what=0x123;
+        Intent intent=getIntent();
+        String albumName=intent.getStringExtra("albumName");
+        String buildDate=intent.getStringExtra("buildDate");
+        setTitle(albumName);
+        initData(albumName,buildDate);
         initRecyclerView();
-        setTitle("my");
         super.onResume();
     }
 
@@ -104,11 +136,30 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
 
-    public void initData(){
+//    //子线程进行文件、数据库相关耗时操作，通过handler，主线程向子线程发送消息
+//    class dateThread extends Thread{
+//        public Handler mHandler;
+//
+//        @Override
+//        public void run() {
+//            Looper.prepare();
+//            mHandler=new Handler(){
+//                @Override
+//                public void handleMessage(@NonNull Message msg) {
+//                    if(msg.what==0x123){
+//                        String albumName=msg.getData().getString("albumName");
+//                        String buildDate=msg.getData().getString("buildDate");
+//                        initData(albumName,buildDate);
+//
+//
+//                    }
+//                }
+//            };
+//            Looper.loop();
+//        }
+//    }
+    public void initData(String albumName,String buildDate){
         myImageList=new ArrayList<MyImage>();
-        String albumName;
-        Intent intent=getIntent();
-        albumName=intent.getStringExtra("albumName");
         Log.i(TAG,"albumName:"+albumName);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String pathStr=Environment.getExternalStorageDirectory() + File.separator+ ".photo"+ File.separator+albumName+ File.separator;
@@ -118,16 +169,22 @@ public class AlbumActivity extends AppCompatActivity {
                 for(int i=0;i<files.length;i++){
                     Log.i(TAG,"FileName:"+files[i].getName());
                     if("".equals( mDbController.searchByWhere(files[i].getName()))){
-                        myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName(),albumName,"",intent.getStringExtra("buildDate")));
+                        myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName(),albumName,"",buildDate));
                     }
                     else {
                         photoInfo = mDbController.searchByWhere(files[i].getName());
-                        if (photoInfo == null) {
-                            myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, "", intent.getStringExtra("buildDate")));
-                        } else {
-                            String description = photoInfo.getStory();
-                            myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, description, intent.getStringExtra("buildDate")));
-                            Log.i(TAG,description);
+                        if(photoInfo==null){
+                            myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, "", buildDate));
+                        }
+                        else {
+                            if (photoInfo.getStory() == null) {
+                                myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, "", buildDate));
+                            } else {
+                                String description = photoInfo.getStory();
+                                myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, description, buildDate));
+                                Log.i(TAG, description);
+                            }
+
                         }
                     }
 
@@ -203,5 +260,65 @@ public class AlbumActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
+    }
+
+    public LatLng getPhotoLocation(String imagePath){
+        float output1=0.0f;
+        float output2=0.0f;
+        LatLng latLng=null;
+        try {
+            ExifInterface exifInterface= new ExifInterface(imagePath);
+//            String datetime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);// 拍摄时间
+//            String deviceName = exifInterface.getAttribute(ExifInterface.TAG_MAKE);// 设备品牌
+//            String deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL); // 设备型号
+            String latValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            String lngValue = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            String latRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+            String lngRef = exifInterface.getAttribute
+                    (ExifInterface.TAG_GPS_LONGITUDE_REF);
+            if (latValue != null && latRef != null && lngValue != null && lngRef != null) {
+                try {
+                    output1 = convertRationalLatLonToFloat(latValue, latRef);
+                    Log.i(TAG, String.valueOf(output1));
+                    output2 = convertRationalLatLonToFloat(lngValue, lngRef);
+                    Log.i(TAG, String.valueOf(output2));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+
+//            Toast.makeText(AlbumActivity.this, deviceName + ":" + deviceModel, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(AlbumActivity.this, output1 + ";" + output2 , Toast.LENGTH_LONG).show();
+
+        latLng = new LatLng(output1 , output1 );
+        return latLng;
+    }
+    private static float convertRationalLatLonToFloat(
+            String rationalString, String ref) {
+
+        String[] parts = rationalString.split(",");
+
+        String[] pair;
+        pair = parts[0].split("/");
+        double degrees = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[1].split("/");
+        double minutes = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[2].split("/");
+        double seconds = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        double result = degrees + (minutes / 60.0) + (seconds / 3600.0);
+        if ((ref.equals("S") || ref.equals("W"))) {
+            return (float) -result;
+        }
+        return (float) result;
     }
 }

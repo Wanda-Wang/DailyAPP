@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:hint="给这篇日记起个标题吧..."
+        android:theme="@style/MyEditText"/>
+    <EditText
+        android:id="@+id/description"
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="告诉我今天过得怎么样吧..."
+        android:background="@null"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/daily_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:textSize="20dp"
+        android:textColor="@color/deep_gray"
+        android:text="好啦"
+        android:background="@drawable/btn_bg_exit"
+        />
+
+</RelativeLayout>

@@ -1,10 +1,12 @@
 package com.example.df_daily.bean;
 
+import android.provider.MediaStore;
+
 import java.util.Date;
 
 public class MyImage {
     private int myImageId;
-    private int myImageSize;
+    private float myImageSize;
     private String myImagePath;
     private String myImageDisplayName;
     private int myImageAddDate;
@@ -14,6 +16,8 @@ public class MyImage {
     private String myDescription;
     private String myImageAlbumBuildTime;
     private String myImageType;
+    private float longitude;
+    private float latitude;
 
     public MyImage(int myImageId) {
         this.myImageId = myImageId;
@@ -24,15 +28,16 @@ public class MyImage {
         this.myImageDisplayName = myImageDisplayName;
         this.myImageAlbum=myImageAlbum;
         this.myDescription=myDescription;
-//        this.myImageType=myImageType;
         this.myImageAlbumBuildTime=myImageAlbumBuildTime;
     }
-    public MyImage(int myImageSize, String myImagePath, String myImageDisplayName,int myImageAddDate) {
-//        this.myImageId = myImageId;
+    public MyImage(float myImageSize, String myImagePath, String myImageDisplayName,float latitude,float longitude) {
         this.myImageSize = myImageSize;
         this.myImagePath = myImagePath;
         this.myImageDisplayName = myImageDisplayName;
-        this.myImageAddDate=myImageAddDate;
+        //经度
+        this.latitude=latitude;
+        //纬度
+        this.longitude=longitude;
     }
 
     public String getMyDescription() {
@@ -55,4 +60,12 @@ public class MyImage {
         return myImageDisplayName;
     }
 
+    //获取经度
+    public float getLatitude() {
+        return latitude;
+    }
+    //获取纬度
+    public float getLongitude() {
+        return longitude;
+    }
 }

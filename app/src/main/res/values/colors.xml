@@ -128,4 +128,12 @@
 <color name="colorBlueGreyPrimaryDark">#455A64</color>
 <color name="colorBlueGreyAccent">#FF4081</color>
 <color name="colorBlueGreyPrimaryCenter">#27373e</color>
+
+    <color name="light_blue">#BFEFFF</color>
+    <color name="deep_blue">#6495ED</color>
+    <color name="transparent">#00000000</color>
+    <color name="theme_color">#D1EEEE</color>
+    <color name="deep_gray">#919191</color>
+    <color name="seventy_trans">#9AB4B6BC</color>
+    <color name="lighter_blue">#B2DFEE</color>
 </resources>

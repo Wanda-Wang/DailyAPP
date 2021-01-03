@@ -40,14 +40,14 @@ public class EditImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_image);
-
+        initRecyclerView();
 //        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout_edit_image_activity);
 //        relativeLayout.addView(View.inflate(this, R.layout.button_confirm, null));
     }
 
     @Override
     protected void onResume() {
-        initRecyclerView();
+
 //        initButton();
         super.onResume();
     }

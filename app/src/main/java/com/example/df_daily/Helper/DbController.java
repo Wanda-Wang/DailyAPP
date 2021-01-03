@@ -106,7 +106,7 @@ public class DbController {
      * @param photoInfo
      */
     public void update(PhotoInfo photoInfo){
-        PhotoInfo mOldPersonInfor = photoInfoDao.queryBuilder().where(PhotoInfoDao.Properties.Id.eq(photoInfo.getId())).build().unique();//拿到之前的记录
+        PhotoInfo mOldPersonInfor = photoInfoDao.queryBuilder().where(PhotoInfoDao.Properties.PhotoName.eq(photoInfo.getPhotoName())).build().unique();//拿到之前的记录
         if(mOldPersonInfor !=null){
             mOldPersonInfor.setPhotoName("张三");
             photoInfoDao.update(mOldPersonInfor);
@@ -117,6 +117,13 @@ public class DbController {
      */
     public PhotoInfo searchByWhere(String wherecluse){
        PhotoInfo personInfors = photoInfoDao.queryBuilder().where(PhotoInfoDao.Properties.PhotoName.eq(wherecluse)).build().unique();
+        return personInfors;
+    }
+    /**
+     * 按条件相册名查询数据
+     */
+    public List<PhotoInfo> searchByAlbumName(String wherecluse){
+        List<PhotoInfo> personInfors =(List<PhotoInfo>) photoInfoDao.queryBuilder().where(PhotoInfoDao.Properties.AlbumName.eq(wherecluse)).list();
         return personInfors;
     }
     /**

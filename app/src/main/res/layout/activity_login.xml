@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/table">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="@color/white"
+            android:textSize="50sp" />
+
+
+    </LinearLayout>
+    <TableLayout
+        android:layout_marginTop="20dp"
+        android:id="@+id/table"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TableRow
+            android:layout_width="251dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/login_table_name">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+<!--                android:background="@mipmap/user_name" />-->
+
+            <EditText
+                android:id="@+id/login_name"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:hint="用户名"
+                android:textColor="@color/white"
+                android:singleLine="true"
+                android:theme="@style/MyEditText"
+                android:textColorHint="@color/white"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="251dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/login_table_psw">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+<!--                android:background="@mipmap/psw" />-->
+
+            <EditText
+                android:id="@+id/login_psw"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:hint="密码"
+                android:textColor="@color/white"
+                android:theme="@style/MyEditText"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:textColorHint="@color/white"/>
+        </TableRow>
+    </TableLayout>
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_margin="20dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg_exit"
+        android:layout_below="@id/table"/>
+    <TextView
+        android:id="@+id/no_id_register"
+        android:layout_margin="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="没有账户？点此注册！"
+        android:textColor="@color/white"
+        android:autoLink="all"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

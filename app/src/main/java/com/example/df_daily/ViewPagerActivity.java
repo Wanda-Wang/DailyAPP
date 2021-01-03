@@ -125,7 +125,10 @@ public class ViewPagerActivity extends AppCompatActivity {
                 public boolean onTouch(View v, MotionEvent event) {
                     Log.i(TAG,"onTouch抽屉");
                     Log.i(TAG,"onClick btn_ok");
-                    photoInfo=new PhotoInfo(null,AlbumActivity.myImageList.get(position).getMyImageDisplayName(),intent.getStringExtra("albumName"),vp_addStory.getText().toString(),intent.getStringExtra("date"));
+                    photoInfo=mDbController.searchByWhere(AlbumActivity.myImageList.get(position).getMyImageDisplayName());
+                    Log.i(TAG,"抽屉"+photoInfo.getPhotoName());
+                    photoInfo.setStory(vp_addStory.getText().toString());
+//                    photoInfo=new PhotoInfo(null,AlbumActivity.myImageList.get(position).getMyImageDisplayName(),intent.getStringExtra("albumName"),vp_addStory.getText().toString(),intent.getStringExtra("date"));
                     Log.i(TAG,"vp_addStory.getText().toString()"+vp_addStory.getText().toString());
                     Log.i(TAG,"intent.getStringExtra(\"albumName\")"+intent.getStringExtra("albumName"));
                     Log.i(TAG,"intent.getStringExtra(\"date\")"+intent.getStringExtra("date"));
