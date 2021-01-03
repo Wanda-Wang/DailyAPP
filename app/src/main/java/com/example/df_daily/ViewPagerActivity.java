@@ -18,7 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.df_daily.Adapter.MyPagerAdapter;
+import com.example.df_daily.Helper.DbController;
 import com.example.df_daily.Helper.ScreenUtil;
+import com.example.df_daily.bean.PhotoInfo;
 import com.example.df_daily.ui.home.HomeFragment;
 import com.yinglan.scrolllayout.ScrollLayout;
 
@@ -39,6 +41,8 @@ public class ViewPagerActivity extends AppCompatActivity {
     HashMap<String,View> aMap;
     Context context;
     int viewPagerIndex;
+    private DbController mDbController;
+    private PhotoInfo photoInfo;
 
     //判断AlbumActivity的recyclerView点开的ViewPager
     private final static int IS_MY_ALBUM=0x0003;
@@ -78,18 +82,19 @@ public class ViewPagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-
+        mDbController = DbController.getInstance(ViewPagerActivity.this);
         context=this;
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().hide();
         }
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final int position = intent.getIntExtra("position", 0);
         final ViewPager viewPager = findViewById(R.id.view_pager);
         vp_addStory=findViewById(R.id.vp_addStory);
         displayName=findViewById(R.id.displayName);
 //        btn_edit=findViewById(R.id.btn_edit);
+//        btn_ok=findViewById(R.id.btn_ok);
 
         initView();
         aMap = new HashMap<String,View>();
@@ -100,6 +105,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         if(intent.getIntExtra("MyAlbum",0)==IS_MY_ALBUM){
             viewPager.setAdapter(new MyPagerAdapter(this,AlbumActivity.myImageList,aMap));
             displayName.setText(AlbumActivity.myImageList.get(position).getMyImageDisplayName());
+            vp_addStory.setText(AlbumActivity.myImageList.get(position).getMyDescription());
             //单击编辑框
             vp_addStory.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,12 +117,19 @@ public class ViewPagerActivity extends AppCompatActivity {
                     vp_addStory.requestFocus();
                 }
             });
+
             //单击抽屉
             mScrollLayout.setOnTouchListener(new View.OnTouchListener() {
                 private Context mContext=context;
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     Log.i(TAG,"onTouch抽屉");
+                    Log.i(TAG,"onClick btn_ok");
+                    photoInfo=new PhotoInfo(null,AlbumActivity.myImageList.get(position).getMyImageDisplayName(),intent.getStringExtra("albumName"),vp_addStory.getText().toString(),intent.getStringExtra("date"));
+                    Log.i(TAG,"vp_addStory.getText().toString()"+vp_addStory.getText().toString());
+                    Log.i(TAG,"intent.getStringExtra(\"albumName\")"+intent.getStringExtra("albumName"));
+                    Log.i(TAG,"intent.getStringExtra(\"date\")"+intent.getStringExtra("date"));
+                    mDbController.insertOrReplace(photoInfo);
                         vp_addStory.setFocusable(false);
                         vp_addStory.clearFocus();
 //                        vp_addStory.setGravity(Gravity.CENTER);
@@ -136,63 +149,69 @@ public class ViewPagerActivity extends AppCompatActivity {
         viewPager.setCurrentItem(position);
         final int pos=position;
         final int myAlbumId=intent.getIntExtra("MyAlbum",0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int pos_=pos;
-            private int currentPosition = 0;
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                if (position>currentPosition) {
-                    //右滑
-                    Log.e("direction","right");
-                    currentPosition=position;
-                    if(myAlbumId==IS_MY_ALBUM){
-                        pos_++;
-                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
-                    }
-                }else if (position<currentPosition){
-                    //左滑
-                    Log.e("direction","left");
-                    currentPosition=position;
-                    if(myAlbumId==IS_MY_ALBUM){
-                        pos_--;
-                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
-
-                    }
-                }
-
-//                if(viewPagerIndex ==position){
-//                    Log.d(TAG,"正在向左滑动");
-//                    if(pos_!=0){
+        //viewpager滑动监听
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            int pos_ = pos;
+//            private int currentPosition = 0;
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//                if (viewPagerIndex == position) {
+//                    Log.d(TAG, "正在向左滑动");
+//                    if (pos_ != 0) {
 //                        pos_--;
 //                    }
-//                    if(myAlbumId==IS_MY_ALBUM){
+//                    if (myAlbumId == IS_MY_ALBUM) {
 //                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
 //                    }
-//                }else{
-//                    Log.d(TAG,"正在向右滑动");
-//                    if(myAlbumId==IS_MY_ALBUM){
-////                        if(pos_!=AlbumActivity.myImageList.size()-1){
+//                } else {
+//                    Log.d(TAG, "正在向右滑动");
+//                    if (myAlbumId == IS_MY_ALBUM) {
+//                        if (pos_ != AlbumActivity.myImageList.size() - 1) {
 //                            pos_++;
-////                        }
+//                        }
 //
-//                            displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
+//                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
 //
 //                    }
 //                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-
-            }
-        });
+////                if (position>currentPosition) {
+////                    //右滑
+////                    Log.e("direction","right");
+////                    currentPosition=position;
+////                    int pos_=pos-1;
+////                    if(myAlbumId==IS_MY_ALBUM){
+////
+////                        pos_++;
+////                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
+////                    }
+////                }else if (position<currentPosition){
+////                    //左滑
+////                    Log.e("direction","left");
+////                    currentPosition=position;
+////                    int pos_=pos+1;
+////                    if(myAlbumId==IS_MY_ALBUM){
+////                        pos_--;
+////                        displayName.setText(AlbumActivity.myImageList.get(pos_).getMyImageDisplayName());
+////
+////                    }
+//            }
+//
+//
+//
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                viewPagerIndex=viewPager.getCurrentItem();
+//
+//            }
+//        });
 
 
     }

@@ -35,6 +35,10 @@ public class MyImage {
         this.myImageAddDate=myImageAddDate;
     }
 
+    public String getMyDescription() {
+        return myDescription;
+    }
+
     public int getMyImageAddDate(){
         return myImageAddDate;
     }

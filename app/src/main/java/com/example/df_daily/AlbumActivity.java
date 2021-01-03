@@ -54,6 +54,7 @@ public class AlbumActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
+
         requestWritePermission();
         mDbController = DbController.getInstance(AlbumActivity.this);
 //        initButton();
@@ -65,6 +66,7 @@ public class AlbumActivity extends AppCompatActivity {
     protected void onResume() {
         initData();
         initRecyclerView();
+        setTitle("my");
         super.onResume();
     }
 
@@ -115,7 +117,21 @@ public class AlbumActivity extends AppCompatActivity {
             if(files!=null){
                 for(int i=0;i<files.length;i++){
                     Log.i(TAG,"FileName:"+files[i].getName());
-                    myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName(),albumName,"",intent.getStringExtra("buildDate")));
+                    if("".equals( mDbController.searchByWhere(files[i].getName()))){
+                        myImageList.add(new MyImage(pathStr+files[i].getName(),files[i].getName(),albumName,"",intent.getStringExtra("buildDate")));
+                    }
+                    else {
+                        photoInfo = mDbController.searchByWhere(files[i].getName());
+                        if (photoInfo == null) {
+                            myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, "", intent.getStringExtra("buildDate")));
+                        } else {
+                            String description = photoInfo.getStory();
+                            myImageList.add(new MyImage(pathStr + files[i].getName(), files[i].getName(), albumName, description, intent.getStringExtra("buildDate")));
+                            Log.i(TAG,description);
+                        }
+                    }
+
+
                 }
             }
         }
@@ -125,6 +141,9 @@ public class AlbumActivity extends AppCompatActivity {
      * 初始化控件
      */
     public void initRecyclerView(){
+        String albumName;
+        Intent intent=getIntent();
+        albumName=intent.getStringExtra("albumName");
         //设置recyclerview
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview_album);
         recyclerView.setHasFixedSize(true);
@@ -134,7 +153,7 @@ public class AlbumActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         //初始化适配器
         adapter = new MyAlbumImageAdapter(this, myImageList,
-                R.layout.item_recyclerview_album, R.id.image_item_recyclerview_album,
+                R.layout.item_recyclerview_album, R.id.image_item_recyclerview_album,albumName,intent.getStringExtra("buildDate"),
                 new MyAlbumImageAdapter.OnRecyclerItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {

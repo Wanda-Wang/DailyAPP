@@ -29,6 +29,7 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
     private List<MyImage> myImageList = new ArrayList<>();
     private MyAlbumImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener = null;
     private int inflateLayout = 0;
+    private  String albumName,date;
     private Context context = null;
     private static int item;
     //判断AlbumActivity的recyclerView点开的ViewPager
@@ -73,12 +74,14 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
      * @param inflateLayout recyclerview布局
      * @param onRecyclerItemClickListener 监听
      */
-    public MyAlbumImageAdapter(Context context, List<MyImage> myImages, int inflateLayout, int item,
+    public MyAlbumImageAdapter(Context context, List<MyImage> myImages, int inflateLayout, int item,String albumName,String date,
                                MyAlbumImageAdapter.OnRecyclerItemClickListener onRecyclerItemClickListener){
         this.context = context;
         this.inflateLayout = inflateLayout;
         this.myImageList = myImages;
         this.item = item;
+        this.date=date;
+        this.albumName=albumName;
         this.onRecyclerItemClickListener = onRecyclerItemClickListener;
     }
 
@@ -127,6 +130,8 @@ public class MyAlbumImageAdapter extends RecyclerView.Adapter<MyAlbumImageAdapte
                     //如果是MyAlbumImage打开ViewPager,传值0x0001表示是相册List
                     intent.putExtra("MyAlbum",IS_MY_ALBUM);
                     intent.putExtra("position", position);
+                    intent.putExtra("albumName",albumName);
+                    intent.putExtra("date",date);
                     //添加过渡动画
                     ActivityOptionsCompat activityOptionsCompat =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
