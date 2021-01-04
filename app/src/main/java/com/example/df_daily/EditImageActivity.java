@@ -128,53 +128,53 @@ public class EditImageActivity extends AppCompatActivity {
         recyclerView.setAdapter(scaleInAnimationAdapter);
 
     }
-    //多余
-    public void initButton(){
-        if(!itemsSelectAlbum.contains("新建相册")){
-            itemsSelectAlbum.add("新建故事");
-        }
-        button = (Button) findViewById(R.id.button_select);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Click select button", Toast.LENGTH_SHORT).show();
-                //注意将ArrayList转为String[]
-                builder = new AlertDialog.Builder(v.getContext())
-                        .setIcon(R.mipmap.ic_launcher)
-                        .setTitle("选择故事")
-                        .setItems((String[]) itemsSelectAlbum.toArray(new String[itemsSelectAlbum.size()]), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (itemsSelectAlbum.get(which).equals(itemsSelectAlbum.get(0))) {
-                                    final EditText editText = new EditText(EditImageActivity.this);
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(EditImageActivity.this)
-                                            .setIcon(R.mipmap.ic_launcher)
-                                            .setTitle("相册名字")
-                                            .setView(editText)
-                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    Toast.makeText(EditImageActivity.this, "点击确定", Toast.LENGTH_SHORT).show();
-                                                    itemsSelectAlbum.add(editText.getText().toString());
-                                                }
-                                            })
-                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    Toast.makeText(EditImageActivity.this, "点击取消", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                    builder.create().show();
-                                    Toast.makeText(EditImageActivity.this, "点击" + itemsSelectAlbum.get(which),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-                        });
-                builder.create().show();
-            }
-        });
-    }
+//    //多余
+//    public void initButton(){
+//        if(!itemsSelectAlbum.contains("新建相册")){
+//            itemsSelectAlbum.add("新建故事");
+//        }
+//        button = (Button) findViewById(R.id.button_select);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(v.getContext(), "Click select button", Toast.LENGTH_SHORT).show();
+//                //注意将ArrayList转为String[]
+//                builder = new AlertDialog.Builder(v.getContext())
+//                        .setIcon(R.mipmap.ic_launcher)
+//                        .setTitle("选择故事")
+//                        .setItems((String[]) itemsSelectAlbum.toArray(new String[itemsSelectAlbum.size()]), new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (itemsSelectAlbum.get(which).equals(itemsSelectAlbum.get(0))) {
+//                                    final EditText editText = new EditText(EditImageActivity.this);
+//                                    AlertDialog.Builder builder = new AlertDialog.Builder(EditImageActivity.this)
+//                                            .setIcon(R.mipmap.ic_launcher)
+//                                            .setTitle("相册名字")
+//                                            .setView(editText)
+//                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    Toast.makeText(EditImageActivity.this, "点击确定", Toast.LENGTH_SHORT).show();
+//                                                    itemsSelectAlbum.add(editText.getText().toString());
+//                                                }
+//                                            })
+//                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialog, int which) {
+//                                                    Toast.makeText(EditImageActivity.this, "点击取消", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            });
+//                                    builder.create().show();
+//                                    Toast.makeText(EditImageActivity.this, "点击" + itemsSelectAlbum.get(which),
+//                                            Toast.LENGTH_SHORT).show();
+//                                }
+//
+//                            }
+//                        });
+//                builder.create().show();
+//            }
+//        });
+//    }
 
 
 }

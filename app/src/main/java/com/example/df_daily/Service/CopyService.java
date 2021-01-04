@@ -63,7 +63,6 @@ public class CopyService extends Service {
         else{
             albums=sp.readAlbum();
         }
-
         if(intent!=null){
             Log.i(TAG,"onStartCommand");
             final String albumName=intent.getStringExtra("albumName");
@@ -73,7 +72,6 @@ public class CopyService extends Service {
                         int i=0;
                         for(MyImage myImage:mySelectedImageList){
                             Date date=new Date(System.currentTimeMillis());
-
                             String filename=myImage.getMyImageDisplayName();
                             //将选中照片信息添加到数据库
                             photoInfo=new PhotoInfo(null,filename,albumName,null,getStringDateShort(date),myImage.getLatitude(),myImage.getLongitude());

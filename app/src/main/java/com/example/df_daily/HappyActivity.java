@@ -38,27 +38,27 @@ public class HappyActivity extends AppCompatActivity implements RadioGroup.OnChe
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch(checkedId){
             case R.id.happy:
-                intent.putExtra("emotion","happy");
+                intent.putExtra("emotion","开心");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             case R.id.sad:
-                intent.putExtra("emotion","sad");
+                intent.putExtra("emotion","悲伤");
 //                Toast.makeText(WeatherActivity.this, "女", 1).show();
                 break;
             case R.id.angry:
-                intent.putExtra("emotion","angry");
+                intent.putExtra("emotion","愤怒");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             case R.id.do_not_know:
-                intent.putExtra("emotion","do_not_know");
+                intent.putExtra("emotion","不知道");
 //                Toast.makeText(WeatherActivity.this, "女", 1).show();
                 break;
             case R.id.clam:
-                intent.putExtra("emotion","clam");
+                intent.putExtra("emotion","平静");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             default:
-                intent.putExtra("emotion","do_not_know");
+                intent.putExtra("emotion","不知道");
                 break;
         }
 

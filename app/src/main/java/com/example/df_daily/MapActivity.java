@@ -173,19 +173,6 @@ public class MapActivity extends AppCompatActivity {
 //            }
         }
 
-
-//        //构建折线点坐标
-//        LatLng p1 = new LatLng(39.97923, 116.357428);
-//        tempBounds.include(p1);
-//        LatLng p2 = new LatLng(39.94923, 116.397428);
-//        tempBounds.include(p2);
-//        LatLng p3 = new LatLng(39.97923, 116.437428);
-//        tempBounds.include(p3);
-//
-//        points.add(p1);
-//        points.add(p2);
-//        points.add(p3);
-
         BitmapDescriptor blueArrow = BitmapDescriptorFactory
                 .fromResource(R.mipmap.icon_road_blue_arrow);
         BitmapDescriptor grayArrow = BitmapDescriptorFactory

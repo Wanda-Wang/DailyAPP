@@ -34,27 +34,27 @@ public class WeatherActivity extends AppCompatActivity implements RadioGroup.OnC
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch(checkedId){
             case R.id.rain:
-                intent.putExtra("weather","rain");
+                intent.putExtra("weather","下雨");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             case R.id.sunny:
-                intent.putExtra("weather","sunny");
+                intent.putExtra("weather","晴天");
 //                Toast.makeText(WeatherActivity.this, "女", 1).show();
                 break;
             case R.id.cloudy:
-                intent.putExtra("weather","cloudy");
+                intent.putExtra("weather","阴天");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             case R.id.snow:
-                intent.putExtra("weather","snow");
+                intent.putExtra("weather","下雪");
 //                Toast.makeText(WeatherActivity.this, "女", 1).show();
                 break;
             case R.id.lei:
-                intent.putExtra("weather","lei");
+                intent.putExtra("weather","打雷");
 //                Toast.makeText(WeatherActivity.this, "男", 1).show();
                 break;
             default:
-                intent.putExtra("weather","sunny");
+                intent.putExtra("weather","晴天");
                 break;
         }
 
